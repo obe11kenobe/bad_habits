@@ -1,3 +1,5 @@
+from calendar import mdays
+
 from django.db import models
 from django.conf import settings
 
@@ -61,3 +63,24 @@ class Habit(models.Model):
 
     def __str__(self):
         return self.title
+
+class HabitLog(models.Model):
+    habit = models.ForeignKey(Habit, # к какой привычке относится запись
+                              on_delete=models.CASCADE,  # если удалить привычку → удаляются все её записи
+                              related_name='logs') # доступно через habit.logs.all()
+    completed_at = models.DateField(verbose_name='Дата выполнения')
+
+    value = models.PositiveSmallIntegerField(
+        null=True, # если бинарная привычка → можно оставить пустым
+        blank=True,
+        verbose_name='Значение'
+    )
+
+    class Meta:
+        unique_together = ('habit', 'completed_at')  # нельзя 2 раза отметить один день
+        ordering = ['-completed_at', ]
+        verbose_name = 'Запись выполнения'
+        verbose_name_plural = 'Записи выполнения'
+
+    def __str__(self):
+        return f'{self.habit.title} - {self.completed_at}'
