@@ -1,0 +1,190 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Удалить Привычку{% endblock %}
+
+{% block content %}
+<div class="text-center mb-3">
+    <h2><i class="fas fa-exclamation-triangle"></i> Удаление Привычки</h2>
+    <p class="mt-3">Вы собираетесь удалить привычку</p>
+</div>
+
+<div class="delete-container">
+    <div class="delete-card">
+        <div class="delete-icon">
+            <i class="fas fa-trash-alt"></i>
+        </div>
+        
+        <h3>{{ habit.title }}</h3>
+        
+        {% if habit.description %}
+            <p class="habit-description">{{ habit.description }}</p>
+        {% endif %}
+        
+        <div class="habit-details">
+            <div class="detail-item">
+                <i class="fas fa-bullseye"></i>
+                <span>Тип: 
+                    {% if habit.goal_type == 'binary' %}
+                        Бинарный
+                    {% else %}
+                        Числовой
+                    {% endif %}
+                </span>
+            </div>
+            
+            {% if habit.goal_value %}
+            <div class="detail-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Цель: {{ habit.goal_value }}</span>
+            </div>
+            {% endif %}
+            
+            <div class="detail-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Частота: 
+                    {% if habit.frequency == 'daily' %}
+                        Ежедневно
+                    {% else %}
+                        Еженедельно
+                    {% endif %}
+                </span>
+            </div>
+            
+            <div class="detail-item">
+                <i class="fas fa-clock"></i>
+                <span>Создано: {{ habit.created_at|date:"d.m.Y" }}</span>
+            </div>
+        </div>
+        
+        <div class="warning-message">
+            <i class="fas fa-exclamation-circle"></i>
+            <p><strong>Внимание!</strong> Это действие нельзя отменить. Все данные о привычке будут удалены навсегда.</p>
+        </div>
+        
+        <form method="post" class="delete-form">
+            {% csrf_token %}
+            <div class="delete-actions">
+                <button type="submit" class="btn btn-danger" onclick="return confirmDelete('Вы действительно хотите удалить привычку «{{ habit.title }}»? Это действие нельзя отменить.')">
+                    <i class="fas fa-trash"></i> Да, Удалить
+                </button>
+                <a href="{% url 'habit_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Отмена
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .delete-container {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .delete-card {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+    
+    .delete-icon {
+        font-size: 4rem;
+        color: #ff6b6b;
+        margin-bottom: 20px;
+    }
+    
+    .delete-card h3 {
+        color: #333;
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+    
+    .habit-description {
+        color: #666;
+        margin-bottom: 20px;
+        font-style: italic;
+    }
+    
+    .habit-details {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 25px;
+        text-align: left;
+    }
+    
+    .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+        padding: 8px 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .detail-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+    
+    .detail-item i {
+        color: #667eea;
+        width: 20px;
+        text-align: center;
+    }
+    
+    .warning-message {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-align: left;
+    }
+    
+    .warning-message i {
+        color: #856404;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+    
+    .warning-message p {
+        color: #856404;
+        margin: 0;
+        font-size: 0.95rem;
+    }
+    
+    .delete-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    @media (max-width: 768px) {
+        .delete-card {
+            padding: 20px;
+        }
+        
+        .delete-actions {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .habit-details {
+            padding: 15px;
+        }
+        
+        .detail-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+        }
+    }
+</style>
+{% endblock %}

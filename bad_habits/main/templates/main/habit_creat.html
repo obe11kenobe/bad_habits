@@ -1,0 +1,247 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Создать Привычку{% endblock %}
+
+{% block content %}
+<div class="text-center mb-3">
+    <h2><i class="fas fa-plus-circle"></i> Создать Новую Привычку</h2>
+    <p class="mt-3">Заполните форму ниже, чтобы создать новую привычку</p>
+</div>
+
+<div class="form-container">
+    <form method="post" class="habit-form">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.title.id_for_label }}">
+                <i class="fas fa-tag"></i> Название привычки *
+            </label>
+            {{ form.title }}
+            {% if form.title.errors %}
+                <div class="error-message">
+                    {% for error in form.title.errors %}
+                        <i class="fas fa-exclamation-triangle"></i> {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}">
+                <i class="fas fa-align-left"></i> Описание
+            </label>
+            {{ form.description }}
+            {% if form.description.errors %}
+                <div class="error-message">
+                    {% for error in form.description.errors %}
+                        <i class="fas fa-exclamation-triangle"></i> {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="{{ form.goal_type.id_for_label }}">
+                    <i class="fas fa-bullseye"></i> Тип цели *
+                </label>
+                {{ form.goal_type }}
+                {% if form.goal_type.errors %}
+                    <div class="error-message">
+                        {% for error in form.goal_type.errors %}
+                            <i class="fas fa-exclamation-triangle"></i> {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group" id="goal-value-group" style="display: none;">
+                <label for="{{ form.goal_value.id_for_label }}">
+                    <i class="fas fa-chart-bar"></i> Целевое значение
+                </label>
+                {{ form.goal_value }}
+                {% if form.goal_value.errors %}
+                    <div class="error-message">
+                        {% for error in form.goal_value.errors %}
+                            <i class="fas fa-exclamation-triangle"></i> {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.frequency.id_for_label }}">
+                <i class="fas fa-calendar-alt"></i> Частота выполнения *
+            </label>
+            {{ form.frequency }}
+            {% if form.frequency.errors %}
+                <div class="error-message">
+                    {% for error in form.frequency.errors %}
+                        <i class="fas fa-exclamation-triangle"></i> {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn">
+                <i class="fas fa-save"></i> Создать Привычку
+            </button>
+            <a href="{% url 'habit_list' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Назад к Списку
+            </a>
+        </div>
+    </form>
+</div>
+
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .habit-form {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 30px;
+        flex-wrap: wrap;
+    }
+    
+    .error-message {
+        color: #dc3545;
+        font-size: 0.9rem;
+        margin-top: 5px;
+        padding: 8px 12px;
+        background: #f8d7da;
+        border-radius: 8px;
+        border: 1px solid #f5c6cb;
+    }
+    
+    .error-message i {
+        margin-right: 5px;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e1e5e9;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: #667eea;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .form-control.error {
+        border-color: #dc3545;
+        background: #fff5f5;
+    }
+    
+    textarea.form-control {
+        min-height: 100px;
+        resize: vertical;
+    }
+    
+    select.form-control {
+        cursor: pointer;
+    }
+    
+    @media (max-width: 768px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+        
+        .form-actions {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .habit-form {
+            padding: 20px;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const goalTypeSelect = document.getElementById('{{ form.goal_type.id_for_label }}');
+        const goalValueGroup = document.getElementById('goal-value-group');
+        const goalValueInput = document.getElementById('{{ form.goal_value.id_for_label }}');
+        
+        // Показывать/скрывать поле целевого значения в зависимости от типа цели
+        function toggleGoalValue() {
+            if (goalTypeSelect.value === 'numeric') {
+                goalValueGroup.style.display = 'block';
+                goalValueInput.required = true;
+            } else {
+                goalValueGroup.style.display = 'none';
+                goalValueInput.required = false;
+                goalValueInput.value = '';
+            }
+        }
+        
+        goalTypeSelect.addEventListener('change', toggleGoalValue);
+        toggleGoalValue(); // Вызвать при загрузке страницы
+        
+        // Добавить классы к полям формы Django
+        const titleField = document.getElementById('{{ form.title.id_for_label }}');
+        const descriptionField = document.getElementById('{{ form.description.id_for_label }}');
+        const goalTypeField = document.getElementById('{{ form.goal_type.id_for_label }}');
+        const goalValueField = document.getElementById('{{ form.goal_value.id_for_label }}');
+        const frequencyField = document.getElementById('{{ form.frequency.id_for_label }}');
+        
+        [titleField, descriptionField, goalTypeField, goalValueField, frequencyField].forEach(field => {
+            if (field) {
+                field.classList.add('form-control');
+            }
+        });
+        
+        // Валидация формы
+        const form = document.querySelector('.habit-form');
+        form.addEventListener('submit', function(e) {
+            let hasErrors = false;
+            
+            // Проверка обязательных полей
+            if (!titleField.value.trim()) {
+                titleField.classList.add('error');
+                hasErrors = true;
+            } else {
+                titleField.classList.remove('error');
+            }
+            
+            if (goalTypeSelect.value === 'numeric' && !goalValueField.value) {
+                goalValueField.classList.add('error');
+                hasErrors = true;
+            } else {
+                goalValueField.classList.remove('error');
+            }
+            
+            if (hasErrors) {
+                e.preventDefault();
+                alert('Пожалуйста, заполните все обязательные поля');
+            }
+        });
+    });
+</script>
+{% endblock %}
