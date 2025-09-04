@@ -13,7 +13,7 @@ SECRET_KEY = 'django-insecure-h&$)rmj)3vg6y+u9&g0ivvh@ng%(^sk-7*51_%he#hb1k1v%p(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']  # Разрешаем все хосты для ngrok
 
 
 # Application definition
@@ -119,3 +119,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/main/login/'
 LOGIN_REDIRECT_URL = '/main/'
 LOGOUT_REDIRECT_URL = '/main/'
+
+# Настройки для ngrok
+USE_TZ = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
