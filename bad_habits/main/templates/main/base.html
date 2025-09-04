@@ -34,11 +34,35 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
 
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
         .header h1 {
             color: #667eea;
-            text-align: center;
             font-size: 2.5rem;
-            margin-bottom: 10px;
+            margin: 0;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .welcome-text {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .welcome-text strong {
+            color: #667eea;
         }
 
         .header p {
@@ -71,13 +95,21 @@
         }
         
         .logout-btn {
-            background: rgba(255, 107, 107, 0.1) !important;
-            color: #ff6b6b !important;
+            background: rgba(255, 107, 107, 0.1);
+            color: #ff6b6b;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 107, 107, 0.3);
         }
         
         .logout-btn:hover {
-            background: #ff6b6b !important;
-            color: white !important;
+            background: #ff6b6b;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
         }
 
         .main-content {
@@ -212,8 +244,19 @@
                 padding: 10px;
             }
             
+            .header-top {
+                flex-direction: column;
+                text-align: center;
+            }
+            
             .header h1 {
                 font-size: 2rem;
+            }
+            
+            .user-info {
+                justify-content: center;
+                flex-direction: column;
+                gap: 10px;
             }
             
             .nav {
@@ -230,12 +273,19 @@
 <body>
     <div class="container">
         <header class="header">
-            <h1><i class="fas fa-chart-line"></i> Отслеживание Привычек</h1>
+            <div class="header-top">
+                <h1><i class="fas fa-chart-line"></i> Отслеживание Привычек</h1>
+                <div class="user-info">
+                    <span class="welcome-text">Добро пожаловать, <strong>{{ user.username }}</strong>!</span>
+                    <a href="{% url 'logout' %}" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Выйти
+                    </a>
+                </div>
+            </div>
             <p>Создавайте полезные привычки и отслеживайте свой прогресс</p>
             <nav class="nav">
                 <a href="{% url 'habit_list' %}"><i class="fas fa-list"></i> Мои Привычки</a>
                 <a href="{% url 'habit_create' %}"><i class="fas fa-plus"></i> Создать Привычку</a>
-                <a href="/admin/logout/" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Выйти</a>
             </nav>
         </header>
 

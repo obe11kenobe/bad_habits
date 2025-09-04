@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.contrib import messages
@@ -70,3 +70,8 @@ def user_register(request):
     else:
         form = RegisterForm()
     return render(request, 'main/user_register.html', {'form': form})
+
+def user_logout(request):
+    logout(request)
+    messages.success(request, 'Вы успешно вышли из системы! 👋')
+    return redirect('home')
