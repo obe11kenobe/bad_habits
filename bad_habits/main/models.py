@@ -7,13 +7,14 @@ from django.conf import settings
 class Habit(models.Model):
     # Тип цели: бинарная (да/нет) или числовая (например, 30 страниц)
     class GoalType(models.TextChoices):
-        BINARY = 'binary', 'Бинарный'
-        NUMERIC = 'numeric', 'Числовой'
+        BINARY = 'binary', 'Выполнено / Не выполнено'
+        NUMERIC = 'numeric', 'Количество (например, страниц)'
 
     # Частота: как часто нужно выполнять привычку
+
     class Frequency(models.TextChoices):
-        DAILY = 'daily', 'Ежедневно'
-        WEEKLY = 'weekly', 'Еженедельно'
+        DAILY = 'daily', 'Каждый день'
+        WEEKLY = 'weekly', 'Каждую неделю'
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,       # к какому пользователю привязана привычка

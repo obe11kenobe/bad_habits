@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.contrib import messages
 from django.urls import reverse_lazy
 from .models import Habit
-from .forms import HabitForm
+from .forms import HabitForm, RegisterForm
 
 @login_required
 def habit_list(request):
@@ -55,3 +56,17 @@ class CustomLoginView(LoginView):
     template_name = 'main/login.html'
     redirect_authenticated_user = True
     success_url = reverse_lazy('habit_list')
+
+def user_register(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user) # сразу логиним после регистрации
+            messages.success(request,'Аккаунт успешно создан! 🎉')
+            return redirect('habit_list')
+        else:
+            messages.error(request, 'Ошибка при регистрации. Исправьте форму!')
+    else:
+        form = RegisterForm()
+    return render(request, 'main/user_register.html', {'form': form})
